@@ -1,0 +1,2361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#06060e">
+  <title>Stellar Archive — Methanol Maser Dataset Catalogue | Asto GH</title>
+  <meta name="description"
+    content="Searchable catalogue of methanol maser datasets from the Asto GH radio astronomy project: source names, coordinates, transitions and frequencies, observation dates, instruments or surveys, data products, and access links.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&amp;family=Space+Mono:wght@400;700&amp;display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --void: #06060e;
+      --deep: #0c0c1e;
+      --surface: #111128;
+      --raised: #181836;
+      --border: rgba(140, 130, 220, 0.15);
+      --border-hi: rgba(160, 150, 255, 0.32);
+      --text: #e8e4f8;
+      --muted: #8b84bd;
+      --accent: #a48eff;
+      --accent-dim: rgba(164, 142, 255, 0.12);
+      --gold: #d8ba66;
+      --teal: #4ecdc4;
+      --danger: #ff6b6b;
+      --danger-dim: rgba(255, 107, 107, 0.1);
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    body {
+      background: var(--void);
+      color: var(--text);
+      font-family: var(--font-serif);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        radial-gradient(1px 1px at 8% 12%, rgba(255, 255, 255, 0.55) 0%, transparent 100%),
+        radial-gradient(1px 1px at 22% 40%, rgba(255, 255, 255, 0.35) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 35% 7%, rgba(255, 255, 255, 0.65) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 65%, rgba(255, 255, 255, 0.45) 0%, transparent 100%),
+        radial-gradient(1px 1px at 65% 20%, rgba(255, 255, 255, 0.38) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 76% 52%, rgba(255, 255, 255, 0.55) 0%, transparent 100%),
+        radial-gradient(1px 1px at 86% 10%, rgba(255, 255, 255, 0.48) 0%, transparent 100%),
+        radial-gradient(1px 1px at 4% 82%, rgba(200, 180, 255, 0.45) 0%, transparent 100%),
+        radial-gradient(1px 1px at 42% 88%, rgba(200, 220, 255, 0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 14% 57%, rgba(200, 180, 255, 0.4) 0%, transparent 100%);
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -60px;
+      z-index: 600;
+      padding: 10px 16px;
+      border-radius: 0 0 6px 6px;
+      background: var(--accent);
+      color: var(--void);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    .placeholder-chip {
+      display: inline-block;
+      padding: 2px 8px;
+      border: 1px dashed rgba(216, 186, 102, 0.55);
+      border-radius: 3px;
+      background: rgba(216, 186, 102, 0.08);
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ══════════════════════════════════════
+   LOGIN SCREEN
+══════════════════════════════════════ */
+    #loginScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: var(--void);
+      padding: 1.5rem;
+    }
+
+    #loginScreen.open {
+      display: flex;
+    }
+
+    .login-box {
+      background: var(--raised);
+      border: 1px solid var(--border-hi);
+      border-radius: 6px;
+      padding: 2.6rem 2.4rem 2.2rem;
+      width: 100%;
+      max-width: 400px;
+      animation: popIn 0.3s ease;
+      position: relative;
+      z-index: 1;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .login-star {
+      text-align: center;
+      margin-bottom: 1.4rem;
+    }
+
+    .login-star svg {
+      opacity: 0.5;
+    }
+
+    .login-title {
+      font-family: var(--font-serif);
+      font-size: 1.7rem;
+      font-weight: 300;
+      text-align: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .login-sub {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 1.6rem;
+    }
+
+    .role-tabs {
+      display: flex;
+      gap: 1px;
+      margin-bottom: 1.4rem;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .role-tab {
+      flex: 1;
+      padding: 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .role-tab.active {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .login-field label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .login-field input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-hi);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 0.6rem 0.85rem;
+      border-radius: 3px;
+      outline: none;
+      margin-bottom: 1.2rem;
+      transition: border-color 0.15s;
+      letter-spacing: 0.08em;
+    }
+
+    .login-field input:focus {
+      border-color: var(--accent);
+    }
+
+    .login-field input.err {
+      border-color: var(--danger);
+    }
+
+    .login-err {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--danger);
+      margin-top: -0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .login-err.show {
+      display: block;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 0.7rem;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.18s;
+    }
+
+    .login-btn:hover {
+      background: var(--accent);
+      color: var(--void);
+    }
+
+    .sidebar-footer .login-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.5rem 0.8rem;
+      width: 100%;
+    }
+
+    .guest-note {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 1rem;
+      line-height: 1.7;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+
+    .login-back {
+      display: block;
+      text-align: center;
+      margin-top: 1.4rem;
+    }
+
+    /* ══════════════════════════════════════
+   APP SHELL
+══════════════════════════════════════ */
+    .app {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background: var(--deep);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-head {
+      padding: 1.6rem 1.4rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.25rem;
+    }
+
+    .brand-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 300;
+      color: var(--text);
+      letter-spacing: 0.03em;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    .role-badge.admin {
+      background: rgba(201, 168, 76, 0.12);
+      color: var(--gold);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+    }
+
+    .role-badge.guest {
+      background: var(--accent-dim);
+      color: var(--accent);
+      border: 1px solid var(--border-hi);
+    }
+
+    .role-badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .sidebar-search {
+      padding: 0.9rem 1.2rem 0.4rem;
+    }
+
+    .sidebar-section-label {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.9rem 1.4rem 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .catalogue-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.3rem 0.6rem 0.6rem;
+      list-style: none;
+    }
+
+    .catalogue-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .catalogue-list::-webkit-scrollbar-thumb {
+      background: var(--border-hi);
+      border-radius: 2px;
+    }
+
+    .cat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 0.55rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border: 1px solid transparent;
+      margin-bottom: 2px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+    }
+
+    .cat-item:hover {
+      background: var(--accent-dim);
+    }
+
+    .cat-item.active {
+      background: var(--accent-dim);
+      border-color: var(--border-hi);
+    }
+
+    .cat-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    .cat-item.active .cat-icon {
+      opacity: 1;
+    }
+
+    .cat-name {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cat-count {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      color: var(--muted);
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .cat-item.active .cat-count {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .sidebar-empty {
+      padding: 1rem 0.9rem;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .sidebar-footer {
+      padding: 0.8rem 0.6rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .new-cat-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0.6rem 0.8rem;
+      border: 1px dashed var(--border-hi);
+      background: transparent;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.18s;
+    }
+
+    .new-cat-btn:hover {
+      background: var(--accent-dim);
+      border-style: solid;
+    }
+
+    .signout-btn,
+    .sidebar-footer .login-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0.5rem 0.8rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.18s;
+    }
+
+    .signout-btn:hover,
+    .sidebar-footer .login-btn:hover {
+      border-color: var(--border-hi);
+      color: var(--text);
+    }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      min-width: 0;
+    }
+
+    /* Search field (shared) */
+    .search-field {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-field svg {
+      position: absolute;
+      left: 0.7rem;
+      width: 14px;
+      height: 14px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-hi);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 0.55rem 0.8rem 0.55rem 2.1rem;
+      border-radius: 3px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-input::placeholder {
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+    }
+
+    /* ── Index view ── */
+    .page-head {
+      padding: 2.4rem 2.5rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 300;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .page-lede {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 64ch;
+      margin-top: 0.7rem;
+    }
+
+    .index-body {
+      padding: 1.6rem 2.5rem 3rem;
+    }
+
+    .index-tools {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.4rem;
+    }
+
+    .index-tools .search-field {
+      flex: 1;
+      min-width: 240px;
+      max-width: 460px;
+    }
+
+    .result-note {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .cat-cards {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .cat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.3rem 1.4rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      transition: border-color 0.18s, transform 0.18s;
+    }
+
+    .cat-card:hover {
+      border-color: var(--border-hi);
+      transform: translateY(-2px);
+    }
+
+    .cat-card-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.8rem;
+    }
+
+    .cat-card-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    .cat-card-count {
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .cat-card-desc {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .cat-card-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1rem;
+      padding-top: 0.4rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .cat-card-meta dt {
+      font-family: var(--font-mono);
+      font-size: 0.54rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .cat-card-meta dd {
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-top: 2px;
+      word-break: break-word;
+    }
+
+    .empty-index {
+      border: 1px dashed var(--border-hi);
+      border-radius: 6px;
+      padding: 2.2rem;
+      text-align: center;
+    }
+
+    .empty-index svg {
+      opacity: 0.35;
+      margin: 0 auto 0.8rem;
+    }
+
+    .empty-index h2 {
+      font-family: var(--font-serif);
+      font-weight: 300;
+      font-size: 1.5rem;
+      color: var(--text);
+    }
+
+    .empty-index>p {
+      color: var(--muted);
+      max-width: 58ch;
+      margin: 0.6rem auto 0;
+    }
+
+    .schema {
+      text-align: left;
+      max-width: 640px;
+      margin: 1.6rem auto 0;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .schema h3 {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.7rem;
+    }
+
+    .schema-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.5rem 1.2rem;
+    }
+
+    .schema-list li {
+      font-size: 0.95rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .schema-list li span {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .schema-note {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-top: 1rem;
+      text-transform: uppercase;
+    }
+
+    /* ── Detail head ── */
+    .main-head {
+      padding: 2rem 2.5rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .main-head-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .crumb {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 0.6rem;
+      color: var(--accent);
+    }
+
+    .crumb:hover {
+      text-decoration: underline;
+    }
+
+    .cat-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 3.4vw, 1.9rem);
+      font-weight: 300;
+      color: var(--text);
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+
+    .cat-desc {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      line-height: 1.7;
+      max-width: 620px;
+    }
+
+    .head-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+      padding-top: 4px;
+    }
+
+    /* ── Metadata grid ── */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1.3rem 2.5rem 0;
+    }
+
+    .meta-cell {
+      background: var(--surface);
+      padding: 0.7rem 0.95rem;
+    }
+
+    .meta-lbl {
+      font-family: var(--font-mono);
+      font-size: 0.54rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+    }
+
+    .meta-val {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-top: 4px;
+      word-break: break-word;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      padding: 1rem 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.15s;
+    }
+
+    .filter-tab:hover {
+      border-color: var(--border-hi);
+      color: var(--text);
+    }
+
+    .filter-tab.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .toolbar-sep {
+      flex: 1;
+    }
+
+    .toolbar .search-field {
+      flex: 1 1 220px;
+      max-width: 320px;
+      order: 3;
+    }
+
+    .upload-small {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.38rem 0.85rem;
+      cursor: pointer;
+      background: transparent;
+      border-radius: 3px;
+      transition: all 0.18s;
+    }
+
+    .upload-small:hover {
+      background: var(--accent);
+      color: var(--void);
+    }
+
+    /* ── File area ── */
+    .file-area {
+      flex: 1;
+      padding: 1.5rem 2.5rem 3rem;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 1px;
+      margin-bottom: 1.4rem;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .stat {
+      flex: 1;
+      background: var(--surface);
+      padding: 0.75rem 1rem;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: block;
+    }
+
+    .stat-lbl {
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .drop-zone {
+      border: 1px dashed var(--border-hi);
+      border-radius: 4px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 1.4rem;
+      width: 100%;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .drop-zone p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .drop-zone span {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      color: var(--accent);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: block;
+      margin-top: 5px;
+    }
+
+    .drop-zone.readonly {
+      cursor: default;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      list-style: none;
+    }
+
+    .file-item {
+      background: var(--surface);
+      display: grid;
+      grid-template-columns: 52px 1fr auto;
+      align-items: center;
+      transition: background 0.15s;
+      animation: fadeUp 0.22s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .file-item:hover {
+      background: var(--raised);
+    }
+
+    .file-icon {
+      width: 52px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.52rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      border-right: 1px solid var(--border);
+    }
+
+    .file-meta {
+      padding: 0.7rem 1rem;
+      min-width: 0;
+    }
+
+    .file-name {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+
+    .file-info {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .file-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 0.75rem;
+    }
+
+    .act-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      border-radius: 3px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .act-btn:hover {
+      border-color: var(--border-hi);
+      color: var(--text);
+    }
+
+    .act-btn.dl:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .act-btn.rm:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .empty-state {
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .empty-state p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--muted);
+    }
+
+    .guest-banner {
+      margin: 0 0 1.4rem;
+      padding: 0.7rem 1rem;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-hi);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Icon buttons ── */
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      border-radius: 3px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--border-hi);
+      color: var(--text);
+    }
+
+    .icon-btn.danger:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: var(--danger-dim);
+    }
+
+    /* Type colours */
+    .tc-csv {
+      color: var(--teal);
+    }
+
+    .tc-pdf {
+      color: #ff6b6b;
+    }
+
+    .tc-img {
+      color: var(--gold);
+    }
+
+    .tc-fits {
+      color: var(--accent);
+    }
+
+    .tc-def {
+      color: var(--muted);
+    }
+
+    /* ── Modals ── */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 6, 14, 0.85);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-bg.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--raised);
+      border: 1px solid var(--border-hi);
+      border-radius: 6px;
+      padding: 2rem 2.2rem;
+      width: 100%;
+      max-width: 480px;
+      animation: popIn 0.2s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal h3 {
+      font-family: var(--font-serif);
+      font-weight: 300;
+      font-size: 1.4rem;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .modal label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .modal input,
+    .modal textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-hi);
+      color: var(--text);
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      padding: 0.55rem 0.8rem;
+      border-radius: 3px;
+      outline: none;
+      margin-bottom: 1rem;
+      transition: border-color 0.15s;
+      resize: vertical;
+    }
+
+    .modal input:focus,
+    .modal textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .modal textarea {
+      min-height: 70px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .modal .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 1rem;
+    }
+
+    .modal .field-hint {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: -0.7rem 0 1rem;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 0.5rem;
+    }
+
+    .btn-cancel {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.1rem;
+      border: 1px solid var(--border-hi);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.15s;
+    }
+
+    .btn-cancel:hover {
+      color: var(--text);
+      border-color: var(--text);
+    }
+
+    .btn-confirm {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.1rem;
+      border: 1px solid var(--accent);
+      background: var(--accent-dim);
+      color: var(--accent);
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.15s;
+    }
+
+    .btn-confirm:hover {
+      background: var(--accent);
+      color: var(--void);
+    }
+
+    .btn-confirm.danger {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: var(--danger-dim);
+    }
+
+    .btn-confirm.danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    /* ── Progress ── */
+    .progress-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 6, 14, 0.8);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .progress-overlay.show {
+      display: flex;
+    }
+
+    .progress-box {
+      background: var(--raised);
+      border: 1px solid var(--border-hi);
+      border-radius: 6px;
+      padding: 1.8rem 2.5rem;
+      text-align: center;
+      min-width: 260px;
+    }
+
+    .prog-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .prog-track {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .prog-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.1s;
+    }
+
+    .prog-file {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-top: 0.7rem;
+      max-width: 220px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--raised);
+      border: 1px solid var(--border-hi);
+      border-radius: 4px;
+      padding: 0.55rem 1.3rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      z-index: 400;
+      transition: transform 0.28s ease;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.ok {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .toast.err {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+      .app {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .catalogue-list {
+        max-height: 220px;
+      }
+
+      .page-head,
+      .main-head,
+      .toolbar {
+        padding-left: 1.4rem;
+        padding-right: 1.4rem;
+      }
+
+      .index-body,
+      .file-area {
+        padding-left: 1.4rem;
+        padding-right: 1.4rem;
+      }
+
+      .meta-grid {
+        margin-left: 1.4rem;
+        margin-right: 1.4rem;
+      }
+
+      .toolbar .search-field {
+        order: 0;
+        max-width: none;
+        flex-basis: 100%;
+      }
+    }
+
+    @media (max-width: 560px) {
+
+      .page-head,
+      .main-head,
+      .toolbar,
+      .index-body,
+      .file-area {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .meta-grid {
+        margin-left: 1rem;
+        margin-right: 1rem;
+        grid-template-columns: 1fr;
+      }
+
+      .cat-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .cat-card-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .file-item {
+        grid-template-columns: 44px 1fr auto;
+      }
+
+      .file-icon {
+        width: 44px;
+        height: 54px;
+      }
+
+      .file-actions {
+        padding: 0 0.4rem;
+      }
+
+      .stats-row {
+        flex-wrap: wrap;
+      }
+
+      .stat {
+        flex: 1 1 40%;
+        min-width: 90px;
+      }
+
+      .toast {
+        white-space: normal;
+        max-width: calc(100vw - 2rem);
+        text-align: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#mainArea">Skip to catalogue</a>
+
+  <!-- ══ LOGIN SCREEN ══ -->
+  <div id="loginScreen" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="login-box">
+      <div class="login-star" aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="22" stroke="rgba(164,142,255,0.4)" stroke-width="1" />
+          <circle cx="24" cy="24" r="14" stroke="rgba(164,142,255,0.2)" stroke-width="0.5" stroke-dasharray="3 4" />
+          <circle cx="24" cy="24" r="3" fill="rgba(164,142,255,0.6)" />
+          <circle cx="24" cy="8" r="1.5" fill="rgba(164,142,255,0.5)" />
+          <circle cx="24" cy="40" r="1.5" fill="rgba(164,142,255,0.5)" />
+          <circle cx="8" cy="24" r="1.5" fill="rgba(164,142,255,0.5)" />
+          <circle cx="40" cy="24" r="1.5" fill="rgba(164,142,255,0.5)" />
+        </svg>
+      </div>
+      <h1 class="login-title" id="loginTitle">Stellar Archive</h1>
+      <p class="login-sub">Methanol maser dataset catalogue</p>
+
+      <div class="role-tabs" role="tablist" aria-label="Choose access level">
+        <button class="role-tab active" data-role="guest" id="tabGuest" role="tab" aria-selected="true"
+          aria-controls="guestPanel">Guest viewer</button>
+        <button class="role-tab" data-role="admin" id="tabAdmin" role="tab" aria-selected="false"
+          aria-controls="adminPanel">Administrator</button>
+      </div>
+
+      <!-- Guest: no password needed -->
+      <div id="guestPanel" role="tabpanel" aria-labelledby="tabGuest">
+        <p class="guest-note">As a guest you can browse catalogues and download files.<br>Sign in as Administrator to
+          manage content.</p>
+        <br>
+        <button class="login-btn" id="guestEnterBtn">Enter as guest</button>
+      </div>
+
+      <!-- Admin: password required -->
+      <div id="adminPanel" role="tabpanel" aria-labelledby="tabAdmin" style="display:none">
+        <div class="login-field">
+          <label for="adminPwd">Password</label>
+          <input type="password" id="adminPwd" placeholder="Enter admin password" autocomplete="current-password">
+          <div class="login-err" id="pwdErr" role="alert">Incorrect password. Please try again.</div>
+        </div>
+        <button class="login-btn" id="adminEnterBtn">Sign in as administrator</button>
+        <p class="guest-note" style="margin-top:0.8rem">Access is managed by the project team.</p>
+      </div>
+
+      <a class="back-link login-back" href="index.html">← Back to Asto GH</a>
+    </div>
+  </div>
+
+  <!-- ══ APP ══ -->
+  <div class="app" id="appShell">
+    <aside class="sidebar" aria-label="Catalogue navigation">
+      <div class="sidebar-head">
+        <div class="brand"><span class="brand-dot" aria-hidden="true"></span>Stellar Archive</div>
+        <div class="brand-title">Catalogues</div>
+        <div class="role-badge" id="roleBadge">
+          <span class="role-badge-dot" aria-hidden="true"></span><span id="roleLabel">Guest</span>
+        </div>
+      </div>
+
+      <div class="sidebar-search">
+        <div class="search-field">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.3" />
+            <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+          </svg>
+          <label class="sr-only" for="catSearch">Search catalogues</label>
+          <input class="search-input" id="catSearch" type="search" placeholder="Search catalogues…"
+            autocomplete="off">
+        </div>
+      </div>
+
+      <div class="sidebar-section-label"><span>Catalogues</span><span id="catTotal">0</span></div>
+      <ul class="catalogue-list" id="catList"></ul>
+
+      <div class="sidebar-footer">
+        <button class="new-cat-btn" id="newCatBtn" style="display:none">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+          </svg>
+          New catalogue
+        </button>
+        <button class="login-btn" id="adminLoginBtn" style="display:none">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M3 1h4a1 1 0 0 1 1 1v2M8 3l2-2 2 2M10 1v4" stroke="currentColor" stroke-width="1"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Login Admin
+        </button>
+        <a class="back-link" href="index.html">← Back to Asto GH</a>
+      </div>
+    </aside>
+
+    <main class="main" id="mainArea" tabindex="-1"></main>
+  </div>
+
+  <!-- Create / Edit Catalogue Modal -->
+  <div class="modal-bg" id="modalBg">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h3 id="modalTitle">New catalogue</h3>
+      <label for="modalName">Name</label>
+      <input type="text" id="modalName" placeholder="e.g. 6.7 GHz maser monitoring 2025" maxlength="64">
+
+      <label for="modalDesc">Description <span style="opacity:0.5;font-size:0.55rem">(optional)</span></label>
+      <textarea id="modalDesc" placeholder="Notes about this catalogue…"></textarea>
+
+      <p class="field-hint">Optional dataset metadata. Leave blank to show a clear placeholder.</p>
+
+      <div class="field-grid">
+        <div>
+          <label for="metaSource">Source name</label>
+          <input type="text" id="metaSource" placeholder="e.g. source designation">
+        </div>
+        <div>
+          <label for="metaCoords">Coordinates</label>
+          <input type="text" id="metaCoords" placeholder="e.g. RA, Dec">
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <div>
+          <label for="metaTransition">Transition / frequency</label>
+          <input type="text" id="metaTransition" placeholder="e.g. 6.7 GHz methanol">
+        </div>
+        <div>
+          <label for="metaObsDate">Observation date</label>
+          <input type="text" id="metaObsDate" placeholder="e.g. 2025-01-01">
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <div>
+          <label for="metaInstrument">Instrument / survey</label>
+          <input type="text" id="metaInstrument" placeholder="e.g. GRAO 32 m">
+        </div>
+        <div>
+          <label for="metaProducts">Data products</label>
+          <input type="text" id="metaProducts" placeholder="e.g. spectra, FITS">
+        </div>
+      </div>
+
+      <label for="metaAccess">Access link <span style="opacity:0.5;font-size:0.55rem">(optional URL)</span></label>
+      <input type="url" id="metaAccess" placeholder="https://…">
+
+      <div class="modal-actions">
+        <button class="btn-cancel" id="modalCancel">Cancel</button>
+        <button class="btn-confirm" id="modalConfirm">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div class="modal-bg" id="delModalBg">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="delModalTitle">
+      <h3 id="delModalTitle">Delete catalogue?</h3>
+      <p
+        style="font-family:var(--font-serif);font-size:0.95rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.6">
+        This will permanently remove <strong id="delCatName" style="color:var(--text)"></strong> and all its files.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="delCancel">Cancel</button>
+        <button class="btn-confirm danger" id="delConfirm">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-overlay" id="progressOverlay">
+    <div class="progress-box" role="status" aria-live="polite">
+      <span class="prog-label">Cataloguing files</span>
+      <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+      <div class="prog-file" id="progFile">—</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <input type="file" id="fileInput" multiple accept="*/*">
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ══ Config ══
+      const ADMIN_PASSWORD = 'admin123'; // Change this to your preferred password
+
+      // ══ State ══
+      let role = 'guest'; // 'admin' | 'guest'
+      let catalogues = []; // Admin-created at runtime. No records are pre-seeded.
+      let activeCatId = null;
+      let activeFilter = 'all';
+      let modalMode = 'create';
+      let editingCatId = null;
+      let deletingCatId = null;
+      let catSearch = '';
+      let fileSearch = '';
+      let lastFocused = null;
+
+      const isAdmin = () => role === 'admin';
+      const $ = id => document.getElementById(id);
+      const uid = () => Math.random().toString(36).slice(2, 10);
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+          { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+        ));
+      }
+
+      // Metadata fields shown for every catalogue entry.
+      const META_FIELDS = [
+        ['source', 'Source name'],
+        ['coordinates', 'Coordinates'],
+        ['transition', 'Transition / frequency'],
+        ['obsDate', 'Observation date'],
+        ['instrument', 'Instrument / survey'],
+        ['products', 'Data products'],
+        ['accessUrl', 'Access link']
+      ];
+      const ph = (label) => '<span class="placeholder-chip">' + label + '</span>';
+
+      // ══ Type helpers ══
+      const typeMap = { csv: 'tc-csv', pdf: 'tc-pdf', gif: 'tc-img', png: 'tc-img', jpg: 'tc-img', jpeg: 'tc-img', fits: 'tc-fits', fit: 'tc-fits', fts: 'tc-fits', xlsx: 'tc-csv', xls: 'tc-csv' };
+      const ext = n => (n.split('.').pop() || '').toLowerCase();
+      const typeCls = n => typeMap[ext(n)] || 'tc-def';
+      const typeLabel = n => { const e = ext(n); return e.toUpperCase() || '???'; };
+      function fmtSize(b) { if (b < 1024) return b + ' B'; if (b < 1024 ** 2) return (b / 1024).toFixed(1) + ' KB'; if (b < 1024 ** 3) return (b / 1024 ** 2).toFixed(2) + ' MB'; return (b / 1024 ** 3).toFixed(2) + ' GB'; }
+      function fmtDate(ts) { const d = new Date(ts); return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); }
+      function showToast(msg, type = '') { const t = $('toast'); t.textContent = msg; t.className = 'toast show ' + type; clearTimeout(window._tt); window._tt = setTimeout(() => t.className = 'toast', 2600); }
+      const getCat = id => catalogues.find(c => c.id === id);
+
+      function matchesCat(c, q) {
+        if (!q) return true;
+        const hay = [c.name, c.desc, c.source, c.coordinates, c.transition, c.obsDate, c.instrument, c.products, c.accessUrl]
+          .concat((c.files || []).map(f => f.name))
+          .filter(Boolean).join(' ').toLowerCase();
+        return hay.includes(q);
+      }
+
+      // ══ Dialog helpers (focus + escape) ══
+      function openDialog(bgId, focusId) {
+        lastFocused = document.activeElement;
+        $(bgId).classList.add('open');
+        setTimeout(() => { const f = focusId && $(focusId); if (f) f.focus(); }, 40);
+      }
+      function closeDialog(bgId) {
+        $(bgId).classList.remove('open');
+        if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+      }
+      function trapFocus(e, container) {
+        if (e.key !== 'Tab') return;
+        const f = container.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select,[tabindex]:not([tabindex="-1"])');
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+
+      // ══ Login ══
+      document.querySelectorAll('.role-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.role-tab').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          $('guestPanel').style.display = btn.dataset.role === 'guest' ? '' : 'none';
+          $('adminPanel').style.display = btn.dataset.role === 'admin' ? '' : 'none';
+          if (btn.dataset.role === 'admin') setTimeout(() => $('adminPwd').focus(), 40);
+          $('pwdErr').classList.remove('show');
+          $('adminPwd').classList.remove('err');
+          $('adminPwd').value = '';
+        });
+      });
+
+      $('guestEnterBtn').addEventListener('click', () => launchApp('guest'));
+
+      $('adminEnterBtn').addEventListener('click', () => {
+        const pwd = $('adminPwd').value;
+        if (pwd === ADMIN_PASSWORD) {
+          launchApp('admin');
+        } else {
+          $('adminPwd').classList.add('err');
+          $('pwdErr').classList.add('show');
+          $('adminPwd').focus();
+        }
+      });
+      $('adminPwd').addEventListener('keydown', e => { if (e.key === 'Enter') $('adminEnterBtn').click(); });
+      $('adminPwd').addEventListener('input', () => { $('adminPwd').classList.remove('err'); $('pwdErr').classList.remove('show'); });
+
+      function launchApp(r) {
+        role = r;
+        $('loginScreen').classList.remove('open');
+        $('appShell').style.display = 'flex';
+
+        const badge = $('roleBadge');
+        badge.className = 'role-badge ' + r;
+        $('roleLabel').textContent = r === 'admin' ? 'Administrator' : 'Guest viewer';
+
+        $('newCatBtn').style.display = isAdmin() ? '' : 'none';
+        $('adminLoginBtn').style.display = isAdmin() ? 'none' : 'flex';
+
+        render();
+        $('mainArea').focus();
+      }
+
+      $('adminLoginBtn').addEventListener('click', () => {
+        role = null;
+        activeCatId = null;
+        activeFilter = 'all';
+        fileSearch = '';
+        $('appShell').style.display = 'none';
+        $('loginScreen').classList.add('open');
+        document.querySelectorAll('.role-tab').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        $('tabAdmin').classList.add('active');
+        $('tabAdmin').setAttribute('aria-selected', 'true');
+        $('guestPanel').style.display = 'none';
+        $('adminPanel').style.display = '';
+        $('adminPwd').value = '';
+        $('pwdErr').classList.remove('show');
+        $('adminPwd').classList.remove('err');
+        setTimeout(() => $('adminPwd').focus(), 60);
+      });
+
+      // ══ Sidebar ══
+      function renderSidebar() {
+        const list = $('catList');
+        $('catTotal').textContent = catalogues.length;
+        const q = catSearch.trim().toLowerCase();
+        const items = catalogues.filter(c => matchesCat(c, q));
+
+        if (!items.length) {
+          list.innerHTML = '<li class="sidebar-empty">' +
+            (catalogues.length ? 'No catalogues match your search' : 'No catalogues yet') + '</li>';
+          return;
+        }
+        list.innerHTML = '';
+        items.forEach(cat => {
+          const li = document.createElement('li');
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'cat-item' + (cat.id === activeCatId ? ' active' : '');
+          if (cat.id === activeCatId) btn.setAttribute('aria-current', 'true');
+          btn.innerHTML =
+            '<svg class="cat-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">' +
+            '<rect x="2" y="4" width="14" height="11" rx="1.5" stroke="currentColor" stroke-width="1"/>' +
+            '<path d="M5 4V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1"/>' +
+            '<path d="M5.5 8.5h7M5.5 11h5" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/></svg>' +
+            '<span class="cat-name">' + esc(cat.name) + '</span>' +
+            '<span class="cat-count">' + cat.files.length + '</span>';
+          btn.setAttribute('aria-label', cat.name + ' — ' + cat.files.length + ' file(s)');
+          btn.addEventListener('click', () => { activeCatId = cat.id; activeFilter = 'all'; fileSearch = ''; render(); });
+          li.appendChild(btn);
+          list.appendChild(li);
+        });
+      }
+
+      // ══ Main render (routes to index or detail) ══
+      function render() {
+        renderSidebar();
+        if (!activeCatId) { renderIndex(); return; }
+        const cat = getCat(activeCatId);
+        if (!cat) { activeCatId = null; render(); return; }
+        renderDetail(cat);
+      }
+
+      // ── Catalogue index ──
+      function cardHtml(cat) {
+        const preview = [['Source', cat.source], ['Transition', cat.transition], ['Instrument', cat.instrument], ['Obs. date', cat.obsDate]];
+        return '<li class="cat-card">' +
+          '<div class="cat-card-head">' +
+          '<h2 class="cat-card-title">' + esc(cat.name) + '</h2>' +
+          '<span class="cat-card-count">' + cat.files.length + ' file' + (cat.files.length === 1 ? '' : 's') + '</span>' +
+          '</div>' +
+          '<p class="cat-card-desc">' + (cat.desc ? esc(cat.desc) : ph('No description')) + '</p>' +
+          '<dl class="cat-card-meta">' +
+          preview.map(([l, v]) => '<div><dt>' + l + '</dt><dd>' + (v ? esc(v) : ph('Not provided')) + '</dd></div>').join('') +
+          '</dl>' +
+          '<button class="btn-confirm open-cat" type="button" data-id="' + cat.id + '">Open catalogue</button>' +
+          '</li>';
+      }
+
+      function emptyIndexHtml() {
+        return '<div class="empty-index">' +
+          '<svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">' +
+          '<circle cx="28" cy="28" r="26" stroke="rgba(164,142,255,0.7)" stroke-width="1"/>' +
+          '<circle cx="28" cy="28" r="17" stroke="rgba(164,142,255,0.4)" stroke-width="0.5" stroke-dasharray="3 4"/>' +
+          '<circle cx="28" cy="28" r="3.5" fill="rgba(164,142,255,0.5)"/></svg>' +
+          '<h2>No catalogues yet</h2>' +
+          '<p>Catalogues are created by project administrators. Once added, every entry records the details below so researchers can see what a dataset contains before opening it.</p>' +
+          '<div class="schema">' +
+          '<h3>What each catalogue entry contains</h3>' +
+          '<ul class="schema-list">' +
+          META_FIELDS.map(([, label]) => '<li>' + label + ' ' + ph('Field') + '</li>').join('') +
+          '</ul>' +
+          '<p class="schema-note">Fields shown as placeholders must be filled with verified project metadata. No dataset records or download links have been invented on this page.</p>' +
+          '</div></div>';
+      }
+
+      function updateIndexResults() {
+        const q = catSearch.trim().toLowerCase();
+        const cats = catalogues.filter(c => matchesCat(c, q));
+        const results = $('indexResults');
+        if (!results) return;
+        results.innerHTML = cats.length ? '<ul class="cat-cards">' + cats.map(cardHtml).join('') + '</ul>' : emptyIndexHtml();
+        const note = $('resultCount');
+        if (note) note.textContent = cats.length + ' catalogue' + (cats.length === 1 ? '' : 's') + (q ? ' matching “' + q + '”' : '');
+      }
+
+      function renderIndex() {
+        const main = $('mainArea');
+        main.innerHTML =
+          '<div class="page-head">' +
+          '<p class="page-eyebrow">Stellar Archive · Asto GH</p>' +
+          '<h1 class="page-title">Methanol maser dataset catalogue</h1>' +
+          '<p class="page-lede">Browse and search the project’s observing catalogues. Each entry summarises its source, coordinates, transition or frequency, observation date, instrument, data products, and access details.</p>' +
+          '</div>' +
+          '<div class="index-body">' +
+          '<div class="index-tools">' +
+          '<div class="search-field">' +
+          '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>' +
+          '<label class="sr-only" for="indexSearch">Search catalogues</label>' +
+          '<input class="search-input" id="indexSearch" type="search" placeholder="Search by source, instrument, product…" value="' + esc(catSearch) + '" autocomplete="off">' +
+          '</div>' +
+          '<p class="result-note" id="resultCount" aria-live="polite"></p>' +
+          '</div>' +
+          '<div id="indexResults"></div>' +
+          '</div>';
+
+        updateIndexResults();
+
+        const search = $('indexSearch');
+        if (search) {
+          search.addEventListener('input', () => { catSearch = search.value; updateIndexResults(); });
+        }
+        $('indexResults').addEventListener('click', e => {
+          const btn = e.target.closest('.open-cat');
+          if (!btn) return;
+          activeCatId = btn.dataset.id;
+          activeFilter = 'all';
+          fileSearch = '';
+          render();
+          $('mainArea').focus();
+        });
+      }
+
+      // ── Catalogue detail ──
+      function metaValueHtml(key, val) {
+        if (!val) return ph('Not provided');
+        if (key === 'accessUrl') {
+          return '<a href="' + esc(val) + '" target="_blank" rel="noopener noreferrer">' + esc(val) + '</a>';
+        }
+        return esc(val);
+      }
+
+      function currentFilteredFiles(cat) {
+        let files = cat.files;
+        if (activeFilter !== 'all') files = files.filter(f => ext(f.name) === activeFilter);
+        const q = fileSearch.trim().toLowerCase();
+        if (q) files = files.filter(f => f.name.toLowerCase().includes(q));
+        return files;
+      }
+
+      function renderDetail(cat) {
+        const main = $('mainArea');
+        const exts = [...new Set(cat.files.map(f => ext(f.name)).filter(Boolean))].sort();
+        if (activeFilter !== 'all' && !exts.includes(activeFilter)) activeFilter = 'all';
+        const filtered = currentFilteredFiles(cat);
+        const totalSize = cat.files.reduce((a, f) => a + f.size, 0);
+
+        const adminHeadBtns = isAdmin() ?
+          '<button class="icon-btn" id="editCatBtn" type="button" aria-label="Edit catalogue">' +
+          '<svg width="14" height="14" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M9 2l2 2-7 7H2v-2L9 2z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg></button>' +
+          '<button class="icon-btn danger" id="deleteCatBtn" type="button" aria-label="Delete catalogue">' +
+          '<svg width="14" height="14" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M2 4h9M5 4V3h3v1M4.5 4l.5 6h3l.5-6" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'
+          : '';
+
+        const uploadBtn = isAdmin() ?
+          '<button class="upload-small" id="addFilesBtn" type="button">' +
+          '<svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M5.5 8V3M3 5L5.5 2.5 8 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Add files</button>'
+          : '';
+
+        main.innerHTML =
+          '<div class="main-head">' +
+          '<div class="main-head-text">' +
+          '<button class="crumb" id="backToIndex" type="button">← All catalogues</button>' +
+          '<h1 class="cat-title">' + esc(cat.name) + '</h1>' +
+          '<p class="cat-desc">' + (cat.desc ? esc(cat.desc) : '<span class="placeholder-chip">No description provided</span>') + '</p>' +
+          '</div>' +
+          '<div class="head-actions">' + adminHeadBtns + '</div>' +
+          '</div>' +
+
+          '<dl class="meta-grid" aria-label="Dataset metadata">' +
+          META_FIELDS.map(([key, label]) =>
+            '<div class="meta-cell"><dt class="meta-lbl">' + label + '</dt>' +
+            '<dd class="meta-val">' + metaValueHtml(key, cat[key]) + '</dd></div>'
+          ).join('') +
+          '</dl>' +
+
+          '<div class="toolbar" id="toolbar">' +
+          '<button class="filter-tab' + (activeFilter === 'all' ? ' active' : '') + '" type="button" data-filter="all" aria-pressed="' + (activeFilter === 'all') + '">All</button>' +
+          exts.map(e => '<button class="filter-tab' + (activeFilter === e ? ' active' : '') + '" type="button" data-filter="' + e + '" aria-pressed="' + (activeFilter === e) + '">' + e.toUpperCase() + '</button>').join('') +
+          '<span class="toolbar-sep"></span>' + uploadBtn +
+          '<div class="search-field">' +
+          '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>' +
+          '<label class="sr-only" for="fileSearch">Search files</label>' +
+          '<input class="search-input" id="fileSearch" type="search" placeholder="Search files…" value="' + esc(fileSearch) + '" autocomplete="off">' +
+          '</div>' +
+          '</div>' +
+
+          '<div class="file-area">' +
+          (!isAdmin() ? '<div class="guest-banner"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1"/><path d="M6.5 6v3M6.5 4h.01" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>Read-only — download available, upload and delete require administrator access.</div>' : '') +
+          '<div class="stats-row">' +
+          '<div class="stat"><span class="stat-val">' + cat.files.length + '</span><span class="stat-lbl">Data files</span></div>' +
+          '<div class="stat"><span class="stat-val">' + fmtSize(totalSize) + '</span><span class="stat-lbl">Total size</span></div>' +
+          '<div class="stat"><span class="stat-val">' + exts.length + '</span><span class="stat-lbl">Formats</span></div>' +
+          '</div>' +
+          (isAdmin()
+            ? '<button class="drop-zone" id="dropZone" type="button"><p>Drop files here to add to this catalogue</p><span>or use Add files above</span></button>'
+            : '<div class="drop-zone readonly"><p>Upload restricted to administrator</p></div>') +
+          '<div id="fileListWrap"></div>' +
+          '</div>';
+
+        renderFileList(filtered);
+
+        // Back to index
+        $('backToIndex').addEventListener('click', () => { activeCatId = null; fileSearch = ''; render(); $('mainArea').focus(); });
+
+        // Admin controls
+        if (isAdmin()) {
+          $('editCatBtn').addEventListener('click', () => openEditModal(activeCatId));
+          $('deleteCatBtn').addEventListener('click', () => openDeleteModal(activeCatId));
+          $('addFilesBtn').addEventListener('click', () => $('fileInput').click());
+          const dz = $('dropZone');
+          dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+          dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+          dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag-over'); processFiles([...e.dataTransfer.files]); });
+          dz.addEventListener('click', () => $('fileInput').click());
+        }
+
+        // Filter tabs
+        $('toolbar').addEventListener('click', e => {
+          const btn = e.target.closest('.filter-tab');
+          if (!btn) return;
+          activeFilter = btn.dataset.filter;
+          $('toolbar').querySelectorAll('.filter-tab').forEach(b => {
+            const on = b === btn;
+            b.classList.toggle('active', on);
+            b.setAttribute('aria-pressed', String(on));
+          });
+          renderFileList(currentFilteredFiles(getCat(activeCatId)));
+        });
+
+        // File search (delegated, keeps focus)
+        $('fileSearch').addEventListener('input', e => {
+          fileSearch = e.target.value;
+          renderFileList(currentFilteredFiles(getCat(activeCatId)));
+        });
+
+        // File actions
+        $('fileListWrap').addEventListener('click', e => {
+          const btn = e.target.closest('.act-btn');
+          if (!btn) return;
+          const c = getCat(activeCatId);
+          const file = c && c.files.find(f => f.id === btn.dataset.fid);
+          if (!file) return;
+          if (btn.classList.contains('dl')) {
+            const url = URL.createObjectURL(file.blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = file.name; a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            showToast('Downloading ' + file.name, 'ok');
+          } else if (btn.classList.contains('rm')) {
+            if (!isAdmin()) return;
+            c.files = c.files.filter(f => f.id !== btn.dataset.fid);
+            showToast('File removed');
+            render();
+          }
+        });
+      }
+
+      function renderFileList(files) {
+        const wrap = $('fileListWrap');
+        if (!wrap) return;
+        if (!files.length) {
+          wrap.innerHTML = '<div class="empty-state"><p>No files match this view yet.</p></div>';
+          return;
+        }
+        const list = document.createElement('ul');
+        list.className = 'file-list';
+        files.forEach((file, i) => {
+          const li = document.createElement('li');
+          li.className = 'file-item';
+          li.style.animationDelay = (reduceMotion ? 0 : i * 0.035) + 's';
+          const rmBtn = isAdmin() ?
+            '<button class="act-btn rm" type="button" data-fid="' + file.id + '" aria-label="Remove ' + esc(file.name) + '">' +
+            '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 3l7 7M10 3L3 10" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></button>'
+            : '';
+          li.innerHTML =
+            '<div class="file-icon ' + typeCls(file.name) + '" aria-hidden="true">' + typeLabel(file.name) + '</div>' +
+            '<div class="file-meta"><div class="file-name" title="' + esc(file.name) + '">' + esc(file.name) + '</div>' +
+            '<div class="file-info">' + fmtSize(file.size) + ' &nbsp;·&nbsp; ' + fmtDate(file.ts) + '</div></div>' +
+            '<div class="file-actions">' +
+            '<button class="act-btn dl" type="button" data-fid="' + file.id + '" aria-label="Download ' + esc(file.name) + '">' +
+            '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M6.5 2v7M4 7l2.5 2.5L9 7M2 11h9" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+            rmBtn + '</div>';
+          list.appendChild(li);
+        });
+        wrap.innerHTML = '';
+        wrap.appendChild(list);
+      }
+
+      // ══ File processing (admin only) ══
+      async function processFiles(files) {
+        if (!isAdmin() || !files.length || !activeCatId) return;
+        const cat = getCat(activeCatId);
+        const overlay = $('progressOverlay');
+        overlay.classList.add('show');
+        for (let i = 0; i < files.length; i++) {
+          const f = files[i];
+          $('progFill').style.width = ((i / files.length) * 100) + '%';
+          $('progFile').textContent = f.name;
+          await new Promise(r => setTimeout(r, reduceMotion ? 0 : 60 + Math.random() * 100));
+          if (!cat.files.find(c => c.name === f.name && c.size === f.size))
+            cat.files.push({ id: uid(), name: f.name, size: f.size, ts: Date.now(), blob: f });
+        }
+        $('progFill').style.width = '100%';
+        await new Promise(r => setTimeout(r, reduceMotion ? 0 : 250));
+        overlay.classList.remove('show');
+        $('progFill').style.width = '0%';
+        render();
+        showToast(files.length + ' file' + (files.length > 1 ? 's' : '') + ' added', 'ok');
+      }
+      $('fileInput').addEventListener('change', e => processFiles([...$('fileInput').files]));
+
+      // ══ Catalogue modals (admin only) ══
+      const META_INPUTS = {
+        source: 'metaSource', coordinates: 'metaCoords', transition: 'metaTransition',
+        obsDate: 'metaObsDate', instrument: 'metaInstrument', products: 'metaProducts', accessUrl: 'metaAccess'
+      };
+      function setMetaInputs(cat) {
+        Object.entries(META_INPUTS).forEach(([key, id]) => { $(id).value = (cat && cat[key]) || ''; });
+      }
+      function readMetaInputs() {
+        const out = {};
+        Object.entries(META_INPUTS).forEach(([key, id]) => { out[key] = $(id).value.trim(); });
+        return out;
+      }
+
+      function openCreateModal() {
+        if (!isAdmin()) return;
+        modalMode = 'create'; editingCatId = null;
+        $('modalTitle').textContent = 'New catalogue';
+        $('modalName').value = ''; $('modalDesc').value = '';
+        setMetaInputs(null);
+        $('modalConfirm').textContent = 'Create';
+        $('modalConfirm').className = 'btn-confirm';
+        openDialog('modalBg', 'modalName');
+      }
+      function openEditModal(id) {
+        if (!isAdmin()) return;
+        const cat = getCat(id); if (!cat) return;
+        modalMode = 'edit'; editingCatId = id;
+        $('modalTitle').textContent = 'Edit catalogue';
+        $('modalName').value = cat.name; $('modalDesc').value = cat.desc || '';
+        setMetaInputs(cat);
+        $('modalConfirm').textContent = 'Save changes';
+        $('modalConfirm').className = 'btn-confirm';
+        openDialog('modalBg', 'modalName');
+      }
+      function closeModal() { closeDialog('modalBg'); }
+
+      $('newCatBtn').addEventListener('click', openCreateModal);
+      $('modalCancel').addEventListener('click', closeModal);
+      $('modalBg').addEventListener('click', e => { if (e.target === $('modalBg')) closeModal(); });
+      $('modalBg').addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); return; } trapFocus(e, $('modalBg')); });
+      $('modalName').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('modalConfirm').click(); } });
+
+      $('modalConfirm').addEventListener('click', () => {
+        if (!isAdmin()) return;
+        const name = $('modalName').value.trim();
+        if (!name) { $('modalName').style.borderColor = 'var(--danger)'; $('modalName').focus(); return; }
+        $('modalName').style.borderColor = '';
+        const desc = $('modalDesc').value.trim();
+        const meta = readMetaInputs();
+        if (modalMode === 'create') {
+          const cat = Object.assign({ id: uid(), name, desc, files: [], created: Date.now() }, meta);
+          catalogues.push(cat);
+          activeCatId = cat.id; activeFilter = 'all'; fileSearch = '';
+          showToast('Catalogue created', 'ok');
+        } else {
+          const cat = getCat(editingCatId);
+          if (cat) { cat.name = name; cat.desc = desc; Object.assign(cat, meta); }
+          showToast('Catalogue updated', 'ok');
+        }
+        closeModal(); render();
+      });
+
+      function openDeleteModal(id) {
+        if (!isAdmin()) return;
+        const cat = getCat(id); if (!cat) return;
+        deletingCatId = id;
+        $('delCatName').textContent = '“' + cat.name + '”';
+        openDialog('delModalBg', 'delCancel');
+      }
+      $('delCancel').addEventListener('click', () => closeDialog('delModalBg'));
+      $('delModalBg').addEventListener('click', e => { if (e.target === $('delModalBg')) closeDialog('delModalBg'); });
+      $('delModalBg').addEventListener('keydown', e => { if (e.key === 'Escape') { closeDialog('delModalBg'); return; } trapFocus(e, $('delModalBg')); });
+      $('delConfirm').addEventListener('click', () => {
+        if (!isAdmin()) return;
+        catalogues = catalogues.filter(c => c.id !== deletingCatId);
+        if (activeCatId === deletingCatId) activeCatId = catalogues[0] ? catalogues[0].id : null;
+        closeDialog('delModalBg');
+        showToast('Catalogue deleted');
+        render();
+      });
+
+      // ══ Sidebar search (persistent) ══
+      $('catSearch').addEventListener('input', e => { catSearch = e.target.value; renderSidebar(); });
+
+      // ══ Init: open as guest viewer by default ══
+      $('catSearch').value = '';
+      $('appShell').style.display = 'flex';
+      const badge = $('roleBadge');
+      badge.className = 'role-badge guest';
+      $('roleLabel').textContent = 'Guest viewer';
+      $('newCatBtn').style.display = 'none';
+      $('adminLoginBtn').style.display = 'flex';
+      render();
+    })();
+  </script>
+</body>
+
+</html>
